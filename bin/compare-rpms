@@ -1,0 +1,56 @@
+#!/bin/sh
+
+set -e
+
+a="$1"
+b="$2"
+
+usage () {
+  cat <<EOF
+Usage: $0 <rpm1> <rpm2>
+EOF
+}
+
+cleanup () {
+  cd
+  [ -d "$tempdir" ] && rm -rf "$tempdir"
+}
+
+trap cleanup EXIT
+
+if ! rpm -qp --quiet "$a" 2>/dev/null; then
+  usage
+  exit 1
+fi
+
+if ! rpm -qp --quiet "$b" 2>/dev/null; then
+  usage
+  exit 1
+fi
+
+tempdir="`mktemp -d /tmp/compare-rpms.XXXXXXX`"
+cd "$tempdir"
+
+rq "$a" > a.metadata
+rq "$b" > b.metadata
+
+extract-rpm-files "$a"
+contents="${a##*/}"
+mv "${contents%.rpm}" a.contents
+
+extract-rpm-files "$b"
+contents="${b##*/}"
+mv "${contents%.rpm}" b.contents
+
+echo "Press enter to compare metadata ..."
+read
+
+diff -u {a,b}.metadata | tty-colour-diff
+
+echo "Press enter to compare contents ..."
+read
+
+diff -ur {a,b}.contents | tty-colour-diff
+
+
+
