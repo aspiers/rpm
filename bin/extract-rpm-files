@@ -22,3 +22,5 @@ mkdir "$rpm_name"
 cd "$rpm_name"
 cpio -id < "$cpio_dir/$cpio"
 echo "done."
+
+rm "$cpio_dir/$cpio"
