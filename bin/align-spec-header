@@ -1,0 +1,3 @@
+#!/usr/bin/perl -pi
+s/^(\w+):/$1 . (" "x(14-length$1)) . ":"/e
+  if 1 .. /^%descr/
