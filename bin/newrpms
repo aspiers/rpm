@@ -1,0 +1,4 @@
+#!/bin/sh
+rpm -q -a --queryformat '%{installtime} %{name} %{version}\n' |
+  sort -n |
+  awk -- '{ print strftime("%d.%m.%Y",$1),$2,$3 }'
