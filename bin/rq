@@ -19,6 +19,8 @@ while [ -n "$1" ]; do
 
   rpm -q$popt -iv                              \
       --qf "$divider\n"                        \
+      --qf "Arch: %{ARCH}\n"                   \
+      --qf "$divider\n"                        \
       --qf "Requires:\n"  --requires           \
       --qf "$divider\n"                        \
       --qf "Provides:\n"  --provides           \
