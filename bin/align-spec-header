@@ -1,3 +1,4 @@
 #!/usr/bin/perl -pi
+die "Can only do one .spec at a time\n" if @ARGV > 1;
 s/^(\w+):/$1 . (" " x (14 - length $1)) . ":"/e
   if 1 .. /^%description\s*$/
