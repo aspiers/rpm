@@ -10,11 +10,10 @@ while [ -n "$1" ]; do
   rpm="$1"
   shift
 
-  if [ -e "$rpm" ]; then
-    popt='p'
-  else
-    popt=''
-  fi
+  popt=''
+  case "$rpm" in
+      *.rpm) [ -e "$rpm" ] && popt='p' ;;
+  esac
 
   divider="$( perl -e 'print "-" x 78' )" # sledgehammer
 
