@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec rpm -qa --last "$@"
+exec rpm -qa --last "$@" | tac
 
 # is better than:
 rpm -q -a --queryformat '%{installtime} %{name} %{version}\n' |
