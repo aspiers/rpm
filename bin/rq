@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ $# != 1 ]; then
+  echo "Usage: $0 <rpm>"
+  echo "Shows everything about an rpm."
+  exit 1
+fi
+
+rpm="$1"
+shift
+
+if [ -e "$rpm" ]; then
+  popt='p'
+else
+  popt=''
+fi
+
+divider="$( perl -e 'print "-" x 78' )" # sledgehammer
+
+rpm -q$popt -iv                              \
+    --qf "$divider\n"                        \
+    --qf "Requires:\n"  --requires           \
+    --qf "$divider\n"                        \
+    --qf "Provides:\n"  --provides           \
+    --qf "$divider\n"                        \
+    --qf "Scripts:\n"   --scripts --triggers \
+    --qf "$divider\n"                        \
+    --qf "Changelog:\n" --changelog          \
+    --qf "$divider\n"                        \
+    --qf "Files:\n"     --list               \
+    -- "$rpm" | less
