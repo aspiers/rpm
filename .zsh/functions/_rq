@@ -12,4 +12,5 @@ fi
 _wanted packages expl 'package' \
     compadd -M 'r:|-=* r:|=*' - "$_rpms[@]" && ret=0
 
-
+_wanted files expl 'package file' \
+    _files -g '*.(#i)rpm' && ret=0
