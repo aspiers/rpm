@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+  echo "Usage: $0 <rpm file>"
+  exit 1
+fi
+
+set -e
+
+rpm="$1"
+rpm_name="${rpm%.rpm}"
+rpm_name="${rpm_name##*/}"
+cpio="$rpm_name.cpio"
+
+echo -n "Extracting to $cpio ... "
+rpm2cpio "$rpm" > "$cpio"
+cpio_dir=`pwd`
+echo "done."
+
+echo -n "Extracting to $rpm_name ... "
+mkdir "$rpm_name"
+cd "$rpm_name"
+cpio -id < "$cpio_dir/$cpio"
+echo "done."
