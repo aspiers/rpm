@@ -13,6 +13,7 @@ while [ -n "$1" ]; do
   popt=''
   case "$rpm" in
       *.rpm) [ -e "$rpm" ] && popt='p' ;;
+        */*) [ -e "$rpm" ] && popt='f' ;;
   esac
 
   divider="$( perl -e 'print "-" x 78' )" # sledgehammer
