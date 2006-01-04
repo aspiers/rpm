@@ -2,8 +2,6 @@
 
 set -e
 
-PATH="/home/aspiers/bin/shortcuts:/home/aspiers/bin:$PATH"
-
 a="$1"
 b="$2"
 
@@ -44,11 +42,13 @@ extract-rpm-files "$b"
 contents="${b##*/}"
 mv "${contents%.rpm}" b.contents
 
-echo "### Comparison of metadata follows"
+echo "Press enter to compare metadata ..."
+read
 
 diff -u {a,b}.metadata | tty-colour-diff
 
-echo "### Comparison of contents follows"
+echo "Press enter to compare contents ..."
+read
 
 diff -ur {a,b}.contents | tty-colour-diff
 
