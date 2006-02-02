@@ -1,9 +1,34 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $# = 0 ]; then
-  echo "Usage: $0 <rpm> [ <rpm> ... ]"
+  echo "Usage: $0 [-l] <rpm> [ <rpm> ... ]"
   echo "Shows everything about one or more rpms."
   exit 1
+fi
+
+if [ "$1" = '-l' ]; then
+  output_format=( -l )
+  less_opts=( )
+  shift
+else  
+  divider="$( perl -e 'print "-" x 78' )" # sledgehammer
+  output_format=(
+      -iv 
+      --qf "$divider\n" 
+      --qf "Arch: %{ARCH}\n" 
+      --qf "$divider\n" 
+      --qf "Requires:\n"  --requires 
+      --qf "$divider\n" 
+      --qf "Provides:\n"  --provides 
+      --qf "$divider\n" 
+      --qf "Scripts:\n"   --scripts --triggers 
+      --qf "$divider\n" 
+      --qf "Changelog:\n" --changelog 
+      --qf "$divider\n" 
+      --qf "Files:\n"     --list 
+  )
+  less_opts=( '+/^-{78}
+g' )
 fi
 
 while [ -n "$1" ]; do
@@ -16,21 +41,5 @@ while [ -n "$1" ]; do
         */*) [ -e "$rpm" ] && popt='f' ;;
   esac
 
-  divider="$( perl -e 'print "-" x 78' )" # sledgehammer
-
-  rpm -q$popt -iv                              \
-      --qf "$divider\n"                        \
-      --qf "Arch: %{ARCH}\n"                   \
-      --qf "$divider\n"                        \
-      --qf "Requires:\n"  --requires           \
-      --qf "$divider\n"                        \
-      --qf "Provides:\n"  --provides           \
-      --qf "$divider\n"                        \
-      --qf "Scripts:\n"   --scripts --triggers \
-      --qf "$divider\n"                        \
-      --qf "Changelog:\n" --changelog          \
-      --qf "$divider\n"                        \
-      --qf "Files:\n"     --list               \
-      -- "$rpm"
-done | less +'/^-{78}
-g'
+  rpm -q$popt "${output_format[@]}" -- "$rpm"
+done | less "${less_opts[@]}"
