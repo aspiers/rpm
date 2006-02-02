@@ -32,4 +32,5 @@ while [ -n "$1" ]; do
       --qf "$divider\n"                        \
       --qf "Files:\n"     --list               \
       -- "$rpm"
-done | less
+done | less +'/^-{78}
+g'
