@@ -2,6 +2,13 @@
 
 local expl
 
+zstyle -s ":completion:*:*:rq:*" cache-policy update_policy
+if [[ -z "$update_policy" ]]
+    then
+    zstyle ":completion:*:*:rq:*" cache-policy _rpms_caching_policy
+fi
+
+
 # FIXME: copied from _rpm function, should refactor out
 if ( [[ ${+_rpms} -eq 0 ]] || _cache_invalid RPMs ) &&
     ! _retrieve_cache RPMs; then
