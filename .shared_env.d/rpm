@@ -4,10 +4,21 @@
 # machine they're being set on, as they could still come in handy when
 # constructing scp/rsync command-lines etc.
 
+# Favour this over rpm --eval '%{_topdir}' in the interests of
+# efficiency:
 if [ -d /usr/src/packages ]; then
   _topdir=/usr/src/packages
 else
   _topdir=/usr/src/redhat
+fi
+
+# Ditto here:
+if [ -d /usr/share/doc/packages ]; then
+  RPMDOCDIR=/usr/share/doc/packages
+  export RPMDOCDIR
+elif [ -d /usr/share/doc ]; then
+  RPMDOCDIR=/usr/share/doc
+  export RPMDOCDIR
 fi
 
 RP=$_topdir/RPMS
