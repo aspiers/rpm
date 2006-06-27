@@ -13,6 +13,7 @@ else
 fi
 
 # Ditto here:
+#docdir=$( rpm --eval '%{_defaultdocdir}' )
 if [ -d /usr/share/doc/packages ]; then
   RPMDOCDIR=/usr/share/doc/packages
   export RPMDOCDIR
