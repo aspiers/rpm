@@ -14,7 +14,7 @@ fi
 
 # Ditto here:
 #docdir=$( rpm --eval '%{_defaultdocdir}' )
-if [ -d /usr/share/doc/packages ]; then
+if [ -e /etc/SuSE-release ]; then
   RPMDOCDIR=/usr/share/doc/packages
   export RPMDOCDIR
 elif [ -d /usr/share/doc ]; then
