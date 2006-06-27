@@ -17,9 +17,11 @@ fi
 if [ -e /etc/SuSE-release ]; then
   RPMDOCDIR=/usr/share/doc/packages
   export RPMDOCDIR
+  DOC=$RPMDOCDIR
 elif [ -d /usr/share/doc ]; then
   RPMDOCDIR=/usr/share/doc
   export RPMDOCDIR
+  DOC=$RPMDOCDIR
 fi
 
 RP=$_topdir/RPMS
