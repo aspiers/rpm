@@ -1,0 +1,7 @@
+#compdef doc
+
+local expl
+_description docs expl "files in $RPMDOCDIR"
+_files "$expl[@]" -W $RPMDOCDIR
+
+
