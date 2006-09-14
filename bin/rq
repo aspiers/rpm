@@ -50,4 +50,4 @@ while [ -n "$1" ]; do
   fi
 
   rpm -q$popt "${output_format[@]}" -- "$rpm"
-done | less "${less_opts[@]}"
+done | less -S "${less_opts[@]}"
