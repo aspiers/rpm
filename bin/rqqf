@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 QUERYFORMAT <RPM> [ <RPM> ... ]"
+  echo "Shows everything about one or more rpms in the specified format."
+  exit 1
+fi
+
+output_format=( --qf "$1\\n" )
+shift
+
+while [ -n "$1" ]; do
+  rpm="$1"
+  shift
+
+  popt=''
+  case "$rpm" in
+      *.rpm) [ -e "$rpm" ] && popt='p' ;;
+        */*) [ -e "$rpm" ] && popt='f' ;;
+  esac
+
+  # Work on executables in $PATH too
+  if [ -z "$popt" ]; then
+    if exe=$( which "$rpm" 2>/dev/null ) && ! rpm -q "$rpm" >&/dev/null; then
+      popt='f'
+      rpm="$exe"
+    fi
+  fi
+
+  rpm -q$popt "${output_format[@]}" -- "$rpm"
+done
