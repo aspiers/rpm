@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# = 0 ]; then
-  echo "Usage: $0 [-l] <rpm> [ <rpm> ... ]"
+  echo "Usage: $0 [-l] <RPM> [ <RPM> ... ]"
   echo "Shows everything about one or more rpms."
   exit 1
 fi
@@ -25,9 +25,9 @@ else
       --qf "$divider\n" 
       --qf "Changelog:\n" --changelog 
       --qf "$divider\n" 
-      --qf "Files:\n"     --list 
+      --qf "Files:\n"     --list
   )
-  less_opts=( '+/^-{78}
+  less_opts=( '+/^-{78}|^Name[ 	]+:.*
 g' )
 fi
 
