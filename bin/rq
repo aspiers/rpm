@@ -12,7 +12,13 @@ if [ "$1" = '-l' ]; then
   shift
 else  
   divider="$( perl -e 'print "-" x 78' )" # sledgehammer
+  # Note that --list seems to always get output last, regardless of
+  # the option order.  So to cope with multiple packages being listed
+  # due to having the same name, we have to either put an extra
+  # divider at the beginning of the output format, or search for
+  # the first line of the -i header in less.  Or both.
   output_format=(
+      --qf "$divider\n" 
       -iv 
       --qf "$divider\n" 
       --qf "Arch: %{ARCH}\n" 
@@ -27,8 +33,12 @@ else
       --qf "$divider\n" 
       --qf "Files:\n"     --list
   )
+  # Note that the trailing 'g' is only necessary if the first line
+  # isn't going to match.
+#   less_opts=( '+/^-{78}
+# g' )
   less_opts=( '+/^-{78}|^Name[ 	]+:.*
-g' )
+' )
 fi
 
 while [ -n "$1" ]; do
