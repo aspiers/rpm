@@ -2,7 +2,8 @@
 #
 # Compare the set of binary rpms included in a list of directory trees
 # with the set of source rpms included in the same trees.  This should
-# give us a good idea if there are any GPL violations.
+# give us a good idea if there are any GPL violations.  See also:
+# http://www.gnu.org/licenses/gpl-faq.html#SourceAndBinaryOnDifferentSites
 #
 # Adam Spiers <aspiers@novell.com>
 
