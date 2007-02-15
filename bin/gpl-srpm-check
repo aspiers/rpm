@@ -52,15 +52,18 @@ printf "%d binary rpms and %d source rpms found.\n",
   scalar keys %{ $files{source} };
 
 warn "Reading source rpm for each binary rpm.  This could take some time ...\n";
-my $count = 0;
+my $checked  = 0;
+my $failures = 0;
 foreach my $binary (sort keys %{ $files{binary} }) {
   my $path = $files{binary}{$binary};
   my $srpm = `rpm -qp --qf "%{SOURCERPM}" $path`;
-  warn "$count binary rpms checked.\n" if ++$count % 50 == 0;
+  warn "$checked binary rpms checked.\n" if ++$checked % 50 == 0;
   die "Couldn't figure out source rpm for $path\n"
     unless $srpm =~ /\.(no)?src\.rpm$/;
   if (! $files{source}{$srpm}) {
     print "$path derives from $srpm which was not present.\n";
+    $failures++;
   }
 }
-print "\n";
+warn "$failures potential violation", ($failures == 1 ? '' : 's'), " found.\n";
+exit $failures;
