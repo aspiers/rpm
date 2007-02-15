@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+#
+# Compare the set of binary rpms included in a list of directory trees
+# with the set of source rpms included in the same trees.
+#
+# Note that some .src.rpms generate multiple binary rpms, in
+# particular *-devel-*.rpms, so it's not a strict 1:1 mapping.
+# Nevertheless this should give us a good idea if there are any
+# GPL violations.
+#
+# Adam Spiers <aspiers@novell.com>
+
+use strict;
+use warnings;
+
+use File::Find;
+
+(my $ME = $0) =~ s,.*/,,;
+
+sub usage {
+  warn @_, "\n" if @_;
+
+  die <<EOUSAGE;
+Usage: $ME DIR1 [DIR2 ...]
+EOUSAGE
+}
+
+usage() unless @ARGV;
+my @dirs = @ARGV;
+
+foreach my $dir (@dirs) {
+  -d $dir or usage("$dir is not a valid mount point.");
+}
+
+my %files;
+find(\&gather, @dirs);
+
+sub gather {
+  return unless -f;
+  if (/\.(no)?src\.rpm$/) {
+    $files{source}{$_} = $File::Find::name;
+    return;
+  }
+  if (/\.(noarch|i.86|x86_64|ia64|ppc(64)?)\.rpm$/) {
+    $files{binary}{$_} = $File::Find::name;
+    return;
+  }
+}
+
+printf "%d binary rpms and %d source rpms found.\n",
+  scalar keys %{ $files{binary} },
+  scalar keys %{ $files{source} };
+
+warn "Reading source rpm for each binary rpm.  This could take some time ...\n";
+my $count = 0;
+foreach my $binary (sort keys %{ $files{binary} }) {
+  my $path = $files{binary}{$binary};
+  my $srpm = `rpm -qp --qf "%{SOURCERPM}" $path`;
+  warn "$count binary rpms checked.\n" if ++$count % 50 == 0;
+  die "Couldn't figure out source rpm for $path\n"
+    unless $srpm =~ /\.(no)?src\.rpm$/;
+  if (! $files{source}{$srpm}) {
+    print "$path derives from $srpm which was not present.\n";
+  }
+}
+print "\n";
