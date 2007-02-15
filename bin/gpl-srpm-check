@@ -52,7 +52,7 @@ my $checked  = 0;
 my $failures = 0;
 foreach my $binary (sort keys %{ $files{binary} }) {
   my $path = $files{binary}{$binary};
-  my $srpm = `rpm -qp --qf "%{SOURCERPM}" $path`;
+  my $srpm = `rpm -qp --qf "%{SOURCERPM}" $path 2>/dev/null`;
   warn "$checked binary rpms checked.\n" if ++$checked % 50 == 0;
   die "Couldn't figure out source rpm for $path\n"
     unless $srpm =~ /\.(no)?src\.rpm$/;
