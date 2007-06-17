@@ -47,8 +47,10 @@ while [ -n "$1" ]; do
 
   popt=''
   case "$rpm" in
-      *.rpm) [ -e "$rpm" ] && popt='p' ;;
-        */*) [ -e "$rpm" ] && popt='f' ;;
+    *.[rs]pm)
+      [ -e "$rpm" ] && popt='p' ;;
+    */*)
+      [ -e "$rpm" ] && popt='f' ;;
   esac
 
   # Work on executables in $PATH too
