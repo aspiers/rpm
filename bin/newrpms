@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rpm -qa --last "$@" | tac
+rpm -qa --last "$@" | tac | less
 
 exit $?
 
