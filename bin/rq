@@ -28,7 +28,7 @@ else
       --qf "Requires:\n"     --requires 
       --qf "$divider\n" 
       --qf "Conflicts:\n"    --conflicts
-      --qf "$divider\n" 
+      --qf "\n$divider\n" 
       --qf "Provides:\n"     --provides 
       --qf "$divider\n" 
       --qf "Suggests:\n"     --suggests 
