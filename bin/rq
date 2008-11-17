@@ -23,15 +23,29 @@ else
       --qf "$divider\n" 
       --qf "Arch: %{ARCH}\n" 
       --qf "$divider\n" 
-      --qf "Requires:\n"  --requires 
+      --qf "Provides:\n"     --provides 
       --qf "$divider\n" 
-      --qf "Provides:\n"  --provides 
+      --qf "Requires:\n"     --requires 
       --qf "$divider\n" 
-      --qf "Scripts:\n"   --scripts --triggers 
+      --qf "Conflicts:\n"    --conflicts
       --qf "$divider\n" 
-      --qf "Changelog:\n" --changelog 
+      --qf "Provides:\n"     --provides 
       --qf "$divider\n" 
-      --qf "Files:\n"     --list
+      --qf "Suggests:\n"     --suggests 
+      --qf "\n$divider\n" 
+      --qf "Recommends:\n"   --recommends 
+      --qf "\n$divider\n" 
+      --qf "Enhances:\n"     --enhances 
+      --qf "\n$divider\n" 
+      --qf "Supplements:\n"  --supplements 
+      --qf "\n$divider\n" 
+      --qf "Basedon:\n"      --basedon 
+      --qf "\n$divider\n" 
+      --qf "Scripts:\n"      --scripts --triggers 
+      --qf "$divider\n" 
+      --qf "Changelog:\n"    --changelog 
+      --qf "$divider\n" 
+      --qf "Files:\n"        --list
   )
   # Note that the trailing 'g' is only necessary if the first line
   # isn't going to match.
