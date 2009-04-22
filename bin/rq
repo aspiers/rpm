@@ -17,6 +17,22 @@ else
   # due to having the same name, we have to either put an extra
   # divider at the beginning of the output format, or search for
   # the first line of the -i header in less.  Or both.
+  if rpm --help | grep -q -- '--suggests'; then
+    extras=(
+        --qf "Suggests:\n"     --suggests 
+        --qf "\n$divider\n" 
+        --qf "Recommends:\n"   --recommends 
+        --qf "\n$divider\n" 
+        --qf "Enhances:\n"     --enhances 
+        --qf "\n$divider\n" 
+        --qf "Supplements:\n"  --supplements 
+        --qf "\n$divider\n" 
+        --qf "Basedon:\n"      --basedon 
+        --qf "\n$divider\n" 
+    )
+  else
+    extras=( )
+  fi
   output_format=(
       --qf "$divider\n" 
       -iv 
@@ -30,17 +46,8 @@ else
       --qf "Conflicts:\n"    --conflicts
       --qf "\n$divider\n" 
       --qf "Provides:\n"     --provides 
-      --qf "$divider\n" 
-      --qf "Suggests:\n"     --suggests 
-      --qf "\n$divider\n" 
-      --qf "Recommends:\n"   --recommends 
-      --qf "\n$divider\n" 
-      --qf "Enhances:\n"     --enhances 
-      --qf "\n$divider\n" 
-      --qf "Supplements:\n"  --supplements 
-      --qf "\n$divider\n" 
-      --qf "Basedon:\n"      --basedon 
-      --qf "\n$divider\n" 
+      --qf "$divider\n"
+      "${extras[@]}"
       --qf "Scripts:\n"      --scripts --triggers 
       --qf "$divider\n" 
       --qf "Changelog:\n"    --changelog 
