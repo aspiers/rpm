@@ -66,7 +66,7 @@ use warnings;
 
 use Getopt::Long;
 
-our $VERSION = '0.10';
+our $VERSION = '0.20';
 
 (my $ME = $0) =~ s,.*/,,;
 
@@ -181,48 +181,17 @@ sub get_repo_ids {
 sub repo_matches {
   my %repo = @_;
 
-  use Data::Dumper;
-  die Dumper(\%repo) unless $repo{enabled};
-
-  if ($opts{enabled}) {
-    return 0 unless $repo{enabled} eq 'Yes';
-  }
-
-  if ($opts{disabled}) {
-    return 0 unless $repo{enabled} eq 'No';
-  }
-
-  if ($opts{refresh}) {
-    return 0 unless $repo{refresh} eq 'Yes';
-  }
-
-  if ($opts{'no-refresh'}) {
-    return 0 unless $repo{refresh} eq 'No';
-  }
-
-  if ($opts{alias}) {
-    return 0 unless $repo{alias} =~ /$opts{alias}/i;
-  }
-
-  if ($opts{name}) {
-    return 0 unless $repo{name} =~ /$opts{name}/i;
-  }
-
-  if ($opts{priority}) {
-    return 0 unless $repo{priority} eq $opts{priority};
-  }
-
-  if ($opts{service}) {
-    return 0 unless $repo{service} =~ /$opts{service}/i;
-  }
-
-  if ($opts{type}) {
-    return 0 unless $repo{type} =~ /$opts{type}/i;
-  }
-
-  if ($opts{uri}) {
-    return 0 unless $repo{uri} =~ /$opts{uri}/i;
-  }
+  # Filter out non-matches
+  return 0 if $opts{enabled}      and $repo{enabled} ne 'Yes';
+  return 0 if $opts{disabled}     and $repo{enabled} ne 'No';
+  return 0 if $opts{refresh}      and $repo{refresh} ne 'Yes';
+  return 0 if $opts{'no-refresh'} and $repo{refresh} ne 'No';
+  return 0 if $opts{alias}        and $repo{alias}   !~ /$opts{alias}/i;
+  return 0 if $opts{name}         and $repo{name}    !~ /$opts{name}/i;
+  return 0 if $opts{priority}     and $repo{priority} ne $opts{priority};
+  return 0 if $opts{service}      and $repo{service} !~ /$opts{service}/i;
+  return 0 if $opts{type}         and $repo{type}    !~ /$opts{type}/i;
+  return 0 if $opts{uri}          and $repo{uri}     !~ /$opts{uri}/i;
 
   if ($opts{match}) {
     my $combo = join '|', map $repo{$_}, qw(alias name type uri service);
