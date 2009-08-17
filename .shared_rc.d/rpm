@@ -20,7 +20,11 @@ else
   elif [ -w "$_root_rpm_topdir" ]; then
     _rpm_topdir="$_root_rpm_topdir"
   else
-    _rpm_topdir=$( rpm --eval '%{_topdir}' )
+    if which rpm >/dev/null 2>&1; then
+      _rpm_topdir=$( rpm --eval '%{_topdir}' )
+    else
+      _rpm_topdir=~/rpmbuild
+    fi
   fi
 fi
 
