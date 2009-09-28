@@ -1,0 +1,39 @@
+#!/bin/sh
+
+exec 3>&0
+
+find /etc -name \*.rpmnew | while read new; do
+    old="${new%.rpmnew}"
+
+    if ! [ -e "$old" ]; then
+        echo "$old doesn't exist!"
+        ls -l "$old"*
+        echo -n "Press enter to continue ... "
+        read <&3
+        continue
+    fi
+
+    if cmp -s "$old" "$new"; then
+        echo "$old and $new identical; removing $new"
+        sleep 2
+        rm "$new"
+        continue
+    fi
+
+    todo='y'
+    while [ -n "$todo" ]; do
+        LESS="$LESS -F" dl "$old" "$new"
+        echo -n "old / new / ediff / rediff [o/n/e/r] ? "
+        read which <&3
+
+        case "$which" in
+            n) mv "$new" "$old" && todo=  ;;
+            o) rm "$new"        && todo=  ;;
+            e) switch-to-emacsclient -e "(ediff-files \"$old\" \"$new\")" ;;
+            r) :                          ;;
+            *)
+                echo "unknown answer; aborting"
+                exit 1 ;;
+        esac
+    done
+done
