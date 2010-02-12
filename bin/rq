@@ -26,10 +26,15 @@ else
         --qf "Enhances:\n"     --enhances 
         --qf "\n$divider\n" 
         --qf "Supplements:\n"  --supplements 
-        --qf "\n$divider\n" 
-        --qf "Basedon:\n"      --basedon 
-        --qf "\n$divider\n" 
+        --qf "\n$divider\n"
     )
+    if rpm --help | grep -q -- '--basedon'; then
+        extras=(
+            "${extras[@]}"
+            --qf "Basedon:\n"      --basedon 
+            --qf "\n$divider\n" 
+        )
+    fi
   else
     extras=( )
   fi
