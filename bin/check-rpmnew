@@ -1,9 +1,18 @@
 #!/bin/sh
 
+if [ "$1" = '-l' ]; then
+    list=y
+fi
+
 exec 3>&0
 
 find /etc -name \*.rpmnew | while read new; do
     old="${new%.rpmnew}"
+
+    if [ -n "$list" ]; then
+        echo "$new"
+        continue
+    fi
 
     if ! [ -e "$old" ]; then
         echo "$old doesn't exist!"
@@ -23,14 +32,16 @@ find /etc -name \*.rpmnew | while read new; do
     todo='y'
     while [ -n "$todo" ]; do
         LESS="$LESS -F" dl "$old" "$new"
-        echo -n "old / new / ediff / rediff [o/n/e/r] ? "
+        echo -n "old / new / ediff / rediff / skip [o/n/e/r/s] ? "
         read which <&3
 
         case "$which" in
             n) mv "$new" "$old" && todo=  ;;
             o) rm "$new"        && todo=  ;;
-            e) switch-to-emacsclient -e "(ediff-files \"$old\" \"$new\")" ;;
+            e) ediff "$old" "$new" \
+                                && todo=  ;;
             r) :                          ;;
+            s) todo=                      ;;
             *)
                 echo "unknown answer; aborting"
                 exit 1 ;;
