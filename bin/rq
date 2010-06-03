@@ -49,8 +49,6 @@ else
       --qf "Requires:\n"     --requires 
       --qf "$divider\n" 
       --qf "Conflicts:\n"    --conflicts
-      --qf "\n$divider\n" 
-      --qf "Provides:\n"     --provides 
       --qf "$divider\n"
       "${extras[@]}"
       --qf "Scripts:\n"      --scripts --triggers 
