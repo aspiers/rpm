@@ -38,9 +38,17 @@ else
   else
     extras=( )
   fi
+
+  if [ -f /etc/SuSE-release ]; then
+      SUSE=( --qf "disturl: %{disturl}\n" )
+  else
+      SUSE=( )
+  fi
+
   output_format=(
       --qf "$divider\n" 
       -iv 
+      "${SUSE[@]}"
       --qf "$divider\n" 
       --qf "Arch: %{ARCH}\n" 
       --qf "$divider\n" 
