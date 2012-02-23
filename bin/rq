@@ -11,7 +11,7 @@ if [ "$1" = '-l' ]; then
   less_opts=( )
   shift
 else  
-  divider="$( perl -e 'print "-" x 78' )" # sledgehammer
+  divider="------------------------------------------------------------------------------"
   # Note that --list seems to always get output last, regardless of
   # the option order.  So to cope with multiple packages being listed
   # due to having the same name, we have to either put an extra
