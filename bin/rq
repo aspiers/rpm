@@ -77,21 +77,5 @@ while [ -n "$1" ]; do
   rpm="$1"
   shift
 
-  popt=''
-  case "$rpm" in
-    *.[rs]pm)
-      [ -e "$rpm" ] && popt='p' ;;
-    */*)
-      [ -e "$rpm" ] && popt='f' ;;
-  esac
-
-  # Work on executables in $PATH too
-  if [ -z "$popt" ]; then
-    if exe=$( which "$rpm" 2>/dev/null ) && ! rpm -q "$rpm" >&/dev/null; then
-      popt='f'
-      rpm="$exe"
-    fi
-  fi
-
-  rpm -q$popt "${output_format[@]}" -- "$rpm"
+  rpm-query-anything "$rpm" "${output_format[@]}"
 done | less -S "${less_opts[@]}"

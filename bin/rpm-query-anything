@@ -1,0 +1,77 @@
+#!/bin/bash
+
+me=`basename $0`
+
+usage ()
+{
+    # Call as: usage [EXITCODE] [USAGE MESSAGE]
+    exit_code=1
+    if [[ "$1" == [0-9] ]]; then
+        exit_code="$1"
+        shift
+    fi
+    if [ -n "$1" ]; then
+        echo "$*" >&2
+        echo
+    fi
+
+    cat <<EOF >&2
+Usage: $me RPM-DESCRIPTOR [RPM-QUERY-OPTS ...]
+PKG-DESCRIPTOR can be any of the following:
+  - installed rpm
+  - .rpm or .spm or .src.rpm file
+  - path to existing file owned by installed rpm
+  - executable in \$PATH owned by installed rpm
+EOF
+    exit "$exit_code"
+}
+
+parse_opts ()
+{
+    if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
+        usage 0
+    fi
+
+    [ $# = 0 ] && usage
+}
+
+detect_type ()
+{
+    popt=''
+
+    # installed rpm
+    if rpm -q "$descriptor" >&/dev/null; then
+        return
+    fi
+
+    # .rpm or .spm or .src.rpm file
+    if [[ "$descriptor" == *.[rs]pm ]] || [[ "$descriptor" == *.src.rpm ]]; then
+        if [ -e "$descriptor" ]; then
+            popt='p'
+            return
+        fi
+    fi
+
+    # path to existing file owned by installed rpm
+    if [ -e "$descriptor" ]; then
+        popt='f'
+        return
+    fi
+
+    # executable in $PATH
+    if exe=$( which "$descriptor" 2>/dev/null ); then
+        popt='f'
+        descriptor="$exe"
+        return
+    fi
+
+    echo "$me: couldn't associate $descriptor with an rpm!" >&2
+    exit 1
+}
+
+parse_opts "$@"
+descriptor="$1"
+shift
+
+detect_type
+rpm -q$popt "$@" -- "$descriptor"
