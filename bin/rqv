@@ -1,3 +1,5 @@
 #!/bin/sh
 
-exec rpm -q "$@"
+for rpm in "$@"; do
+    rpm-query-anything "$rpm"
+done
