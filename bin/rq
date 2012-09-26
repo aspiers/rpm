@@ -47,6 +47,7 @@ else
 
   output_format=(
       --qf "$divider\n" 
+      --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n"
       -iv 
       "${SUSE[@]}"
       --qf "$divider\n" 
